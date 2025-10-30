@@ -4,31 +4,39 @@
 
 {% block body %}
 <div class="page flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 px-4">
-  <form method="post" action="/login" class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md animate-bounce-in">
-    <h2 class="text-2xl font-bold text-center mb-4text-gray-800 dark:text-white">Welcome Back</h2>
+  <form method="post" class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md animate-bounce-in">
+    <h2 class="text-2xl font-bold text-center mb-4 text-gray-800 dark:text-white">Welcome Back</h2>
 
     {# Flash messages (server-side) #}
-    {% for label, messages in app.flashes %}
-      {% for msg in messages %}
-        <div class="mb-4 px-4 py-3 rounded-md text-sm {{ label== 'success' ? 'bg-green-50 text-green-800' : label == 'error' ? 'bg-red-50 text-red-800' : 'bg-gray-50 text-gray-800' }}">
-          {{ msg }}
-        </div>
-      {% endfor%}
-    {% endfor %}
-
-    {# CSRF token placeholder for Symfony authentication #}
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')|default('') }}" />
+    {% if errors.general %}
+      <div class="mb-4 px-4 py-3 rounded-md text-sm bg-red-50 text-red-800">
+        {{ errors.general }}
+      </div>
+    {% endif %}
+    
+    {% ifapp.flashes %}
+      {% for label, messages in app.flashes %}
+        {% for msg in messages %}
+          <div class="mb-4 px-4 py-3 rounded-md text-sm {{ label== 'success' ? 'bg-green-50 text-green-800' : label == 'error' ? 'bg-red-50 text-red-800' : 'bg-gray-50 text-gray-800' }}">
+           {{ msg }}
+          </div>
+        {% endfor%}
+      {% endfor %}
+    {% elseif flash_message is defined %}
+      <div class="mb-4 px-4 py-3 rounded-md text-sm {{ flash_type|default('info') == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+        {{ flash_message }}
+      </div>
+    {% endif %}
 
     {# Email field #}
     <div class="mb-3">
-      <label class="blocktext-gray-700 dark:text-gray-200 text-sm font-medium mb-1">Email</label>
+      <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium mb-1">Email</label>
       <input
         type="email"
         name="email"
         value="{{ last_username|default('') }}"
         class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white {{ errors.email ? 'border-red-500' : '' }}"
-        required
-        autofocus
+        requiredautofocus
       />
       {% if errors.email %}
         <p class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
@@ -41,18 +49,18 @@
       <input
         type="password"
         name="password"
-        class="w-fullp-2 border rounded-md dark:bg-gray-700 dark:text-white {{ errors.password ? 'border-red-500' : '' }}"
+        class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white {{ errors.password ? 'border-red-500' : '' }}"
         required
       />
       {% if errors.password %}
         <p class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
-     {% endif %}
+     {%endif %}
     </div>
 
     {# Submit button #}
     <div class="w-full flex flex-col sm:flex-row justify-between items-center gap-3 mt-5">
-      <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition" {%if isSubmitting %}disabled{% endif %}>
-        {{ isSubmitting ? 'Logging in...' : 'Login' }}
+      <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition">
+Login
       </button>
     </div>
 
@@ -63,7 +71,7 @@
     </div>
   </form>
 </div>
-{% endblock %}
+{% endblock%}
 
 {% block javascripts %}
 <script>
@@ -74,14 +82,14 @@
         const passwordInput = document.getElementById('password');
         const loginButton = document.getElementById('loginButton');
 
-        constvalidateEmail = (email) => {
+       constvalidateEmail = (email) => {
             if (!email.trim()) return 'Email is required';
             if (!/\S+@\S+\.\S+/.test(email)) return 'Enter a valid email address';
             return '';
         };
 
         const validatePassword = (password) => {
-            if (!password) return'Password is required';
+            if (!password)return'Password is required';
             if (password.length < 6) return 'Password must be at least 6 characters';
             return '';
         };
@@ -89,7 +97,7 @@
         const showError = (input, message) => {
             const errorElement = input.parentElement.querySelector('.text-red-500');
             if (!errorElement) {
-               const p = document.createElement('p');
+const p = document.createElement('p');
                 p.className = 'text-red-500 text-sm mt-1';
                 p.textContent = message;
                 input.parentElement.appendChild(p);
@@ -99,7 +107,7 @@
             input.classList.add('border-red-500');
         };
 
-       const clearError = (input) => {
+const clearError = (input) => {
             const errorElement = input.parentElement.querySelector('.text-red-500');
             if (errorElement) {
                 errorElement.remove();

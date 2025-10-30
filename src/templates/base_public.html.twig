@@ -7,12 +7,12 @@
     <link href="/build/styles.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-    {% include 'components/navbar.html.twig' %}
     <main class="min-h-screen">
         {% block body %}{% endblock %}
     </main>
 
-    {% include 'components/footer.html.twig' %}
+    {% include 'footer.html.twig' %}
+    {% include 'components/toast.html.twig' %}
 
     <script>
       // Dark mode toggle functionality

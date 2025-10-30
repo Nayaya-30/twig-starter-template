@@ -7,27 +7,14 @@
     <link href="/build/styles.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-    {% include 'components/navbar.html.twig' %}
     <div class="flex">
         <div class="flex-1 p-6">
-            {# Client-side guard for protected routes #}
-            <script>
-                (function(){
-                    try {
-                        const session = localStorage.getItem('ticketapp_session');
-                        const user = localStorage.getItem('currentUser');
-                        if (!session || !user) {
-                            window.location.href = '/login';
-                        }
-                    } catch(e) { console.warn('auth guard error', e);}
-                })();
-            </script>
-
             {% block body %}{% endblock %}
         </div>
     </div>
 
-    {% include 'components/footer.html.twig' %}
+    {% include 'footer.html.twig' %}
+    {% include 'components/toast.html.twig' %}
 
     <script>
       // Dark mode toggle functionality
